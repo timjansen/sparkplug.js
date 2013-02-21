@@ -24,27 +24,27 @@ You have to
 For optimization, you can also compile sparkplug.js and the AMD modules into a single file, as long as sparkplug.js is on top.
 
 For example, you can load AMD modules like that:
->	&lt;script src="sparkplug.js" /&gt;
->	&lt;script src="minified.js" /&gt;
->	&lt;script src="someotherlib.js" /&gt;
->
->	&lt;script&gt;
->		var $ = require("minified");
->		// do something
->	&lt;/script&gt;
+	<script src="sparkplug.js" />
+	<script src="minified.js" />
+	<script src="someotherlib.js" />
+	
+	<script>
+		var $ = require("minified");
+		// do something
+	</script>
 
 You could also define your main code as AMD module and start it with a simple require.
->	&lt;script src="sparkplug.js" /&gt;
->	&lt;script src="minified.js" /&gt;
->	&lt;script src="someotherlib.js" /&gt;
->
->	&lt;script&gt;
->		define("main", function(require) {
->			var $ = require("minified");
->			// do something
->		});
->		require("main"); // start the main module
->	&lt;/script&gt;
+	<script src="sparkplug.js" />
+	<script src="minified.js" />
+	<script src="someotherlib.js" />
+	
+	<script>
+		define("main", function(require) {
+			var $ = require("minified");
+			// do something
+		});
+		require("main"); // start the main module
+	</script>
 
 Of course, your application code can and usually should be put into a separate script file.
 
