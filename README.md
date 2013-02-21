@@ -3,16 +3,16 @@ sparkplug.js
 
 <strong>WARNING! UNDER DEV, UNTESTED</strong>
 
-Sparkplug.js is a tiny <strike>loader</strike> initializer for <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD modules</a>
+Sparkplug.js is a tiny initializer for <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD modules</a>
 in web browsers. 
 After compilation with Google Closure and gzip'ing its size is only 512 bytes.
 
 ## What will sparkplug.js do for me?
 
-sparkplug.js will
-* load all AMD modules that you include via &lt;script> tags
+sparkplug.js...
+* will load all AMD modules that you include via &lt;script> tags
 * allows more than one AMD module per &lt;script> (so you can compress them into a single file)
-* provide you with a <code>require()</code> function to obtain references to module exports
+* provides you with a <code>require()</code> function to obtain references to module exports
 
 ## How do I use sparkplug.js?
 
@@ -21,30 +21,30 @@ You have to
 * Load as many AMD modules as you like using &lt;script>
 * Then execute your JavaScript which can use <code>require()</code> to obtain references
 
-For optimization, you can also compile sparkplug.js and AMD modules into a single file, as long as sparkplug.js is on top.
+For optimization, you can also compile sparkplug.js and the AMD modules into a single file, as long as sparkplug.js is on top.
 
 For example, you can load AMD modules like that:
-> &lt;script src="sparkplug.js" />
-> &lt;script src="minified.js" />
-> &lt;script src="someotherlib.js" />
+> &lt;script src="sparkplug.js" /&gt;
+> &lt;script src="minified.js" /&gt;
+> &lt;script src="someotherlib.js" /&gt;
 >
-> &lt;script>
+> &lt;script&gt;
 >   var $ = require("minified");
 >   // do something
-> &lt;/script>
+> &lt;/script&gt;
 
 You could also define your main code as AMD module and start it with a simple require.
-> &lt;script src="sparkplug.js" />
-> &lt;script src="minified.js" />
-> &lt;script src="someotherlib.js" />
+> &lt;script src="sparkplug.js" /&gt;
+> &lt;script src="minified.js" /&gt;
+> &lt;script src="someotherlib.js" /&gt;
 >
-> &lt;script>
+> &lt;script&gt;
 >   define("main", function(require) {
 >       var $ = require("minified");
 >       // do something
 >   });
 >   require("main"); // start the main module
-> &lt;/script>
+> &lt;/script&gt;
 
 Of course, your application code can and usually should be put into a separate script file.
 
