@@ -14,6 +14,15 @@ sparkplug.js...
 * allows more than one AMD module per &lt;script> (so you can compress them into a single file)
 * provides you with a <code>require()</code> function to obtain references to module exports
 
+
+## Why use sparkplug.js?
+
+Use sparkplug.js if...
+
+* you want a <code>require()</code> function that works just like in node.js
+* you want AMD modules without the overhead of true AMD loaders
+
+
 ## How do I use sparkplug.js?
 
 You have to

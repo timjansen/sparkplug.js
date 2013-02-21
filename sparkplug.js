@@ -27,7 +27,8 @@
 	function isList(v) {
 		return v && v.length != null && !isString(v) && !isFunction(v);
 	}
-		
+
+
 	function resolvePath(path, base) {
 		var pathSteps = path.split('/');
 		if (pathSteps[0] == '.' || pathSteps[0] == '..')  {
@@ -60,8 +61,8 @@
 	function requireInternal(id, baseId, recursionsLeft) { 
 		var modDepExports = [];  // array corresponding to mod.d, containing resolved dependencies
 		var topLevelId = resolvePath(id, baseId);
+		var modulesObj = {'id': topLevelId, 'exports': {}};
 		var mod = modules[topLevelId];
-		var exportObj = {}; 
 		
 		if (!mod)
 			throw new Error('Cant find '+id);
@@ -75,15 +76,15 @@
 			if (modDepId == REQUIRE)
 				modDepExports[i] = createExportRequire(modDepId); 
 			else if (modDepId == EXPORTS)
-				modDepExports[i] = exportObj;
+				modDepExports[i] = modulesObj[EXPORTS];
 			else if (modDepId == MODULE)
-				modDepExports[i] = {'id': topLevelId};
+				modDepExports[i] = modulesObj;
 			else
 				modDepExports[i] = requireInternal(modDepId, id, recursionsLeft-1);
 		}
 
 		mod['l'] = 1;
-		mod['x'] = isFunction(mod['f']) ? (mod['f'].apply(_window, modDepExports) || exportObj) : mod['f'];
+		mod['x'] = isFunction(mod['f']) ? (mod['f'].apply(_window, modDepExports) || modulesObj[EXPORTS]) : mod['f'];
 		mod['l'] = 0;
 		return mod['x'];
 	}
@@ -95,7 +96,7 @@
 				for (var i = 0; i < id.length; i++)
 					deps.push(r(id[i]));
 				if (isFunction(callback))
-					callback.apply(null, deps);
+					callback.apply(_window, deps);
 			} 
 			else
 				return requireInternal(id, baseId, RECURSION_DEPTH); 
