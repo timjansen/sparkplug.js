@@ -24,9 +24,9 @@ You have to
 For optimization, you can also compile sparkplug.js and the AMD modules into a single file, as long as sparkplug.js is on top.
 
 For example, you can load AMD modules like that:
-	<script src="sparkplug.js" />
-	<script src="minified.js" />
-	<script src="someotherlib.js" />
+	<script src="sparkplug.js"></script>
+	<script src="minified.js"></script>
+	<script src="someotherlib.js"></script>
 	
 	<script>
 		var $ = require("minified");
@@ -34,9 +34,9 @@ For example, you can load AMD modules like that:
 	</script>
 
 You could also define your main code as AMD module and start it with a simple require.
-	<script src="sparkplug.js" />
-	<script src="minified.js" />
-	<script src="someotherlib.js" />
+	<script src="sparkplug.js"></script>
+	<script src="minified.js"></script>
+	<script src="someotherlib.js"></script>
 	
 	<script>
 		define("main", function(require) {
