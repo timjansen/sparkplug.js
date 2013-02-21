@@ -69,14 +69,14 @@ sparkplug.js provides two global functions:
   	note that modules must provide an ID in order for sparkplug.js to find them. 
   	
   	<code>define()</code> will also provide the symbols
-  	<code>require</code>, <code>exports</code> and <code>module</code> to AMD modules, if requires by their dependencies.
+  	<code>require</code>, <code>exports</code> and <code>module</code> to AMD modules, if required by their dependencies.
 * 	<code>require()</code> implements the CommonJS Modules/1.1.1 syntax as well as the extensions 
   	<a href="https://github.com/amdjs/amdjs-api/wiki/require">required by AMD</a>. 
   	
   	In other words, both syntax variants
-  	<code>require(string)</code> and <code>require(array, callback)</code> will work. <code>require(string)</code> will work fine
-  	in a global context, even though this is not required by AMD, and as long as you use sparkplug.js there are no disadvantages by
-  	using this simple variant - sparkplug.js does not load asynchronously, so callbacks are not needed.
+  	<code>require(string)</code> and <code>require(array, callback)</code> will work, both locally and globally.
+  	<code>require(string)</code> is not required by AMD, and as long as you use sparkplug.js there are no disadvantages by
+  	using this simple variant. As sparkplug.js does not load asynchronously, callbacks are not needed. 
   
  
 
