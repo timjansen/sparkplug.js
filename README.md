@@ -5,13 +5,15 @@ Sparkplug.js is a tiny <strike>loader</strike> initializer for <a href="https://
 in web browsers. 
 After compilation with Google Closure and gzip'ing its size is only 512 bytes.
 
-== What will sparkplug.js do for me? ==
+## What will sparkplug.js do for me?
+
 sparkplug.js will
 * load all AMD modules that you include via &lt;script> tags
 * allows more than one AMD module per &lt;script> (so you can compress them into a single file)
 * provide you with a <code>require()</code> function to obtain references to module exports
 
-== How do I use sparkplug.js? ==
+## How do I use sparkplug.js?
+
 You have to
 1. Load sparkplug.js with a &lt;script> tag before any AMD modules.
 2. Load as many AMD modules as you like using &lt;script>
@@ -45,7 +47,8 @@ You could also define your main code as AMD module and start it with a simple re
 Of course, your application code can and usually should be put into a separate script file.
 
 
-== Limitations ==
+## Limitations
+
 Sparkplug.js has some limitations:
 1. All AMD modules <strong>must define an id</strong>, because sparkplug.js does work on a file basis
 2. sparkplug.js will not load files given to <code>require()</code>, only modules that called <code>define()</code> with their id
@@ -55,7 +58,7 @@ Sparkplug.js is best suited for smaller projects that benefit from having only o
 consider everything over 50kByte, should consider using one of the more sophisticated loaders such as curl.js or require.js.
 
 
-== API ==
+## API
 
 sparkplug.js provides two global functions:
 * <code>define()</code> implements the full API described in the <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD wiki</a>, but
