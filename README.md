@@ -1,6 +1,8 @@
 sparkplug.js
 ============
 
+<strong>WARNING! UNDER DEV, UNTESTED</strong>
+
 Sparkplug.js is a tiny <strike>loader</strike> initializer for <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD modules</a>
 in web browsers. 
 After compilation with Google Closure and gzip'ing its size is only 512 bytes.
@@ -15,9 +17,9 @@ sparkplug.js will
 ## How do I use sparkplug.js?
 
 You have to
-1. Load sparkplug.js with a &lt;script> tag before any AMD modules.
-2. Load as many AMD modules as you like using &lt;script>
-3. Then execute your JavaScript which can use <code>require()</code> to obtain references
+* Load sparkplug.js with a &lt;script> tag before any AMD modules.
+* Load as many AMD modules as you like using &lt;script>
+* Then execute your JavaScript which can use <code>require()</code> to obtain references
 
 For optimization, you can also compile sparkplug.js and AMD modules into a single file, as long as sparkplug.js is on top.
 
@@ -50,9 +52,9 @@ Of course, your application code can and usually should be put into a separate s
 ## Limitations
 
 Sparkplug.js has some limitations:
-1. All AMD modules <strong>must define an id</strong>, because sparkplug.js does work on a file basis
-2. sparkplug.js will not load files given to <code>require()</code>, only modules that called <code>define()</code> with their id
-3. sparkplug.js does not load/initialize asynchronously.
+* All AMD modules <strong>must define an id</strong>, because sparkplug.js does work on a file basis
+* sparkplug.js will not load files given to <code>require()</code>, only modules that called <code>define()</code> with their id
+* sparkplug.js does not load/initialize asynchronously.
 
 Sparkplug.js is best suited for smaller projects that benefit from having only one or two files. Large JavaScript applications, which I would
 consider everything over 50kByte, should consider using one of the more sophisticated loaders such as curl.js or require.js.
