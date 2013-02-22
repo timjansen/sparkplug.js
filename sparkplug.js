@@ -27,8 +27,7 @@
 	function isList(v) {
 		return v && v.length != null && !isString(v) && !isFunction(v);
 	}
-
-
+	
 	function resolvePath(path, base) {
 		var pathSteps = path.split('/');
 		if (pathSteps[0] == '.' || pathSteps[0] == '..')  {
@@ -65,7 +64,7 @@
 		var mod = modules[topLevelId];
 		
 		if (!mod)
-			throw new Error('Cant find '+id);
+			error('Cant find '+id);
 		if (mod['x'])
 			return mod['x'];
 		if (mod['l'] || !recursionsLeft)

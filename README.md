@@ -22,6 +22,14 @@ Use sparkplug.js if...
 * you want a <code>require()</code> function that works just like in node.js
 * you want AMD modules without the overhead of true AMD loaders
 
+## Size Comparison
+
+<table>
+<tr><th>Name</th><th>Compiled Size</th><th>Compiled and GZip'd</th></tr>
+<tr><td>sparkplug.js</td><td>901 bytes</td><td>523 bytes</td></tr>
+<tr><td>require.js 2.1.4</td><td>14629 bytes</td><td>6029 bytes</td></tr>
+<tr><td>curl 0.7.3</td><td>7967 bytes</td><td>3921 bytes</td></tr>
+</table>
 
 ## How do I use sparkplug.js?
 
