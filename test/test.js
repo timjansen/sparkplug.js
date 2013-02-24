@@ -97,16 +97,41 @@ function runTests(loadInContext) {
 			assert.equal(sp.require('t9').val1, 'gxx');
 		});
 		
-		it('should use empty id by default', function() {
+		it('should assign numbers to anonymous modules', function() {
 			var sparkplug = loadInContext();
-			sparkplug.define(function() { return 9; });
-			assert.equal(sparkplug.require(''), 9);
-			sparkplug.define(['module', 'require', 'exports'], function() { return 5; });
-			assert.equal(sparkplug.require(''), 5);
-			sparkplug.define(24);
-			assert.equal(sparkplug.require(''), 24);
+			sparkplug.define(function() { return 1; });
+			sparkplug.define(2);
+			sparkplug.define(function() { return 3; });
+
+			assert.equal(sparkplug.require(0), 1);
+			assert.equal(sparkplug.require(1), 2);
+			assert.equal(sparkplug.require(2), 3);
 		});
 
+		it('should use require.amd.ids by as default ids', function() {
+			var sparkplug = loadInContext();
+			sparkplug.define(function() { return 1; });
+			sparkplug.define(2);
+			sparkplug.define(function() { return 3; });
+
+			sparkplug.define.amd.ids = ['t1', 't2', 't3'];
+			assert.equal(sparkplug.require('t1'), 1);
+			assert.equal(sparkplug.require('t2'), 2);
+			assert.equal(sparkplug.require('t3'), 3);
+		});
+		
+		it('should use resolve dependencies using define.amd.ids', function() {
+			var sparkplug = loadInContext();
+			sparkplug.define(function() { return 1; });
+			sparkplug.define(['t1'], 2);
+			sparkplug.define(['t1', 't2'], function(t1, t2) { assert.equal(t1, 1);  assert.equal(t2, 2); return 3; });
+
+			sparkplug.define.amd.ids = ['t1', 't2', 't3'];
+			assert.equal(sparkplug.require('t3'), 3);
+			assert.equal(sparkplug.require('t1'), 1);
+			assert.equal(sparkplug.require('t2'), 2);
+		});
+		
 		it('should allow specifying dependencies', function() {
 			var sp = loadInContext();
 
@@ -278,10 +303,10 @@ function runTests(loadInContext) {
 }
 
 describe('sparkplug.js', function() {
-	runTests(function() { return loadInContextSrc('../sparkplug.js')});
+	runTests(function() { return loadInContextSrc('../sparkplug.js'); });
 });
 describe('sparkplug.min.js', function() {
-	runTests(function() { return loadInContextSrc('../sparkplug.min.js')});
+	runTests(function() { return loadInContextSrc('../sparkplug.min.js'); });
 });
 
 

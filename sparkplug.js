@@ -15,6 +15,8 @@
 	var EXPORTS = 'exports';
 	var MODULE = 'module';
 	var modules = {}; // stores id -> {d: ['dependency', 'dependency'], f: factoryfunction(){}, x: {exports}, l: <loadingflag>}
+	var anonymousIdIndex = 0;   // provides names for anonymous modules
+	var amd = {'ids':[]};       // define.amd content
 
 	function isType(s,o) {
 		return typeof s == o;
@@ -49,11 +51,16 @@
 
 	function requireInternal(id, baseId, recursionsLeft) { 
 		var modDepExports = [];  // array corresponding to mod.d, containing resolved dependencies
-		var topLevelId = resolvePath(id || '', baseId);
+		var topLevelId = resolvePath(id, baseId);
+		var anonymousIds = amd['ids'];
 		var mod = modules[topLevelId];
 		var modulesObj = {'id': topLevelId};
 		modulesObj[EXPORTS] = {};
+
 		
+		for (var i = 0; i < anonymousIds.length; i++)
+			if (topLevelId == anonymousIds[i])
+				mod = modules[i];
 		if (!mod || mod['l'] || !recursionsLeft)
 			throw new Error(mod ? 'Circular Deps' : 'Cant find '+id);
 		if (mod['x'])
@@ -92,11 +99,11 @@
 	}
 	
 	(_window['define'] = function(id, dependencies) { // third arg is factory, but accessed using arguments..
-		modules[isString(id) ? id : ''] = {
+		modules[isString(id) ? id : anonymousIdIndex++] = {
 				'd': isList(id) ? id : (isList(dependencies) ? dependencies : [REQUIRE, EXPORTS, MODULE]),  // dependencies
 				'f': arguments[arguments.length-1] // factory
 		};
-	})['amd'] = {};
+	})['amd'] = amd;
 	
 	_window[REQUIRE] = createExportRequire('');
 })(this);
