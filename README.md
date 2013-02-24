@@ -74,7 +74,7 @@ Of course, your application code can and usually should be put into a separate s
 
 Sparkplug.js has some limitations:
 * All AMD modules <strong>should define an id</strong>, because sparkplug.js does not know file names. To include anonymous modules without
-  id, see the Troubleshooting section below.
+  id, see the Troublemakers section below.
 * sparkplug.js will not load files given to <code>require()</code>, only modules that called <code>define()</code> with their id
 * sparkplug.js does not load/initialize asynchronously.
 
@@ -91,8 +91,8 @@ sparkplug.js provides two global functions:
   	<code>define()</code> will also provide the symbols
   	<code>require</code>, <code>exports</code> and <code>module</code> to AMD modules, if required by their dependencies.
   	
-  	<code>define.amd</code> is defined and has one property: <code>define.amd.ids</code>. You can put an array of ids in there to
-  	assign ids to anonymous modules. See Troubleshooting section below.
+  	<code>define.amd</code> is defined and has one sparkplug.js-specific property: <code>define.amd.ids</code>. You can put an array of ids in there to
+  	assign ids to anonymous modules. See Troublemakers section below.
 * 	<code>require()</code> implements the <a href="http://wiki.commonjs.org/wiki/Modules/1.1.1#Require">CommonJS Modules/1.1.1 syntax</a> as well as the extensions 
   	<a href="https://github.com/amdjs/amdjs-api/wiki/require">required by AMD</a>. 
   	
@@ -102,8 +102,7 @@ sparkplug.js provides two global functions:
   	using this simple variant. As sparkplug.js does not load asynchronously, callbacks are not really needed.
         If you do not plan to migrate your code to a asynchronous loader, using <code>require(string)</code> is recommended.
         
-    You can also call <code>require(integer)</code> with a numeric argument to retrieve an anonymous module, but the code is more readable 
-    if you use <code>define.amd.ids</code> as shown below.
+    You can also call <code>require(integer)</code> with a numeric argument to retrieve an anonymous module.
   
 
 ## Troublemakers
@@ -117,7 +116,7 @@ The recommended way to handle such modules is to set <code>define.amd.ids</code>
 in the order of their declaration. It can be set either before or after their definition, but always before the first time they are 
 required (either explicitly or as dependency).
 
-The following example loads three AMD modules. lodash.js and cookies.js are anonymous modules, while moment.js has the id 'moment'.
+The following example loads three AMD modules. lodash.js and cookies.js are anonymous modules, while moment.js already has the id 'moment'.
 
 	<script src="sparkplug.js"></script>
 	<script src="moment.js"></script>
@@ -132,8 +131,8 @@ The following example loads three AMD modules. lodash.js and cookies.js are anon
 		var _ = require('lodash');
 	</script>
 
-Alternatively you could also require anonymous modules by their index. The first anonymous module has the index 0. 
-The following example uses indices:
+Alternatively you could also require anonymous modules using their 0-based index.
+The following example does this:
 
 	<script src="sparkplug.js"></script>
 	<script src="moment.js"></script>
@@ -146,19 +145,20 @@ The following example uses indices:
 		var _ = require(1);
 	</script>
  
-In general, <code>define.amd.ids</code> is recommended, as it results in more readable code. 
+In general it is better to use <code>define.amd.ids</code>, as it results in more readable code. If there are dependencies between
+anonymous modules, <code>define.amd.ids</code> is also the only solution.
 
 
 ### jQuery
 
-jQuery 1.9.x supports AMD, but only if the property <code>define.amd.jQuery</code> has been set:
+jQuery 1.9.x supports AMD, but only if the property <code>define.amd.jQuery</code> has been set before the jQuery declaration:
 
 	<script src="sparkplug.js"></script>
+	<script>define.amd.jQuery = true;</script>
 	<script src="jquery.js"></script>
 	
 	<script>
-		define.amd.jQuery = true;
-		var jQuery = require('jQuery'); 
+		var jQuery = require('jquery'); 
 	</script>
 	
 Please note that, unlike other AMD loaders, sparkplug.js does not support several jQuery versions on the same page.
