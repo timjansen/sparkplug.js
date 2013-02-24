@@ -3,7 +3,7 @@ sparkplug.js
 
 Sparkplug.js is a tiny initializer for <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD modules</a>, primarily
 for use in web browsers. 
-It can be used as an alternative to AMD loaders like requirejs and curl.js if you want nodelike <code>require()</code> style
+It can be used as an alternative to AMD loaders like requirejs and curl.jsm, giving you with Node-like <code>require()</code> style
 dependency management and AMD modules without the overhead.
 After compilation with Google Closure and gzip'ing its size is only 532 bytes.
 
@@ -13,7 +13,7 @@ After compilation with Google Closure and gzip'ing its size is only 532 bytes.
 Use sparkplug.js if...
 
 * you want a <code>require()</code> function that works just like in node.js
-* you want AMD modules without the overhead of true AMD loaders
+* you want AMD modules without the overhead of real AMD loaders
 
 
 ## What will sparkplug.js do for me?
@@ -78,24 +78,25 @@ Sparkplug.js has some limitations:
 * sparkplug.js does not load/initialize asynchronously.
 
 Sparkplug.js is best suited for smaller projects that benefit from having only one or two files. Large JavaScript applications, which I would
-consider everything over 50kByte, should consider using one of the more sophisticated loaders such as curl.js or require.js.
+consider everything over 50kByte, may be better off using one of the more sophisticated loaders such as curl.js or require.js.
 
 
 ## API
 
 sparkplug.js provides two global functions:
 * 	<code>define()</code> implements the full API described in the <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD wiki</a>, but
-  	note that modules must provide an ID in order for sparkplug.js to find them. 
+  	please note that modules must provide an ID in order for sparkplug.js to find them. 
   	
   	<code>define()</code> will also provide the symbols
   	<code>require</code>, <code>exports</code> and <code>module</code> to AMD modules, if required by their dependencies.
-* 	<code>require()</code> implements the CommonJS Modules/1.1.1 syntax as well as the extensions 
+* 	<code>require()</code> implements the <a href="http://wiki.commonjs.org/wiki/Modules/1.1.1#Require">CommonJS Modules/1.1.1 syntax</a> as well as the extensions 
   	<a href="https://github.com/amdjs/amdjs-api/wiki/require">required by AMD</a>. 
   	
   	In other words, both syntax variants
   	<code>require(string)</code> and <code>require(array, callback)</code> will work, both locally and globally.
-  	<code>require(string)</code> is not required by AMD, and as long as you use sparkplug.js there are no disadvantages by
-  	using this simple variant. As sparkplug.js does not load asynchronously, callbacks are not needed. 
+  	<code>require(string)</code> is not required by AMD, but as long as you use sparkplug.js there are no disadvantages by
+  	using this simple variant. As sparkplug.js does not load asynchronously, callbacks are not really needed.
+        If you do not plan to migrate your code to a asynchronous loader, using <code>require(string)</code> is recommended.
   
 ## Example
 
