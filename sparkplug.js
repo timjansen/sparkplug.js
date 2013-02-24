@@ -1,5 +1,5 @@
 /*
- * Sparkplug.js - Minimalistic initializer for AMD modules
+ * Sparkplug.js - Tiny initializer for AMD modules
  * 
  * Public Domain. Use, modify and distribute it any way you like. No attribution required.
  *
@@ -13,7 +13,7 @@
 	var REQUIRE = 'require';         
 	var EXPORTS = 'exports';
 	var MODULE = 'module';
-	var modules = {}; // stores id: {d: ['dependency', 'dependency'], f: factoryfunction(){}, x: {exports}, l: <loadingflag>}
+	var modules = {}; // stores id -> {d: ['dependency', 'dependency'], f: factoryfunction(){}, x: {exports}, l: <loadingflag>}
 
 	function isType(s,o) {
 		return typeof s == o;
@@ -29,19 +29,16 @@
 	}
 	
 	function resolvePath(path, base) {
-		var pathSteps = path.split('/');
-		if (pathSteps[0] == '.' || pathSteps[0] == '..')  {
+		if (/^\.\.?\//.test(path))  {
+			var pathSteps = path.split('/');
+			var step;
 			var newPath = base.split('/');
-			for (var i = 0; i < pathSteps.length; i++)  {
-				var step = pathSteps[i] 
-				if (step == '.')
+			newPath.pop();
+			while ((step = pathSteps.shift()) != null)  {
+				if (step == '..')
 					newPath.pop();
-				else if (step == '..') {
-					newPath.pop();
-					newPath.pop();
-				}
-				else
-					base.push(step);
+				else if (step != '' && step != '.')
+					newPath.push(step);
 			}
 			return newPath.join('/');
 		}
@@ -49,37 +46,28 @@
 			return path;
 	}
 
-	var define =_window['define'] = function(id, dependencies) { // third arg is factory, but accessed using arguments..
-		modules[isString(id) ? id : ''] = {
-				'd': isList(id) ? id : (isList(dependencies) ? dependencies : [REQUIRE, EXPORTS, MODULE]),  // dependencies
-				'f': arguments[arguments.length-1] // factory
-		};
-	};
-	define['amd'] = {};
-
 	function requireInternal(id, baseId, recursionsLeft) { 
 		var modDepExports = [];  // array corresponding to mod.d, containing resolved dependencies
-		var topLevelId = resolvePath(id, baseId);
-		var modulesObj = {'id': topLevelId, 'exports': {}};
+		var topLevelId = resolvePath(id || '', baseId);
 		var mod = modules[topLevelId];
+		var modulesObj = {'id': topLevelId};
+		modulesObj[EXPORTS] = {};
 		
-		if (!mod)
-			error('Cant find '+id);
+		if (!mod || mod['l'] || !recursionsLeft)
+			throw new Error(mod ? 'Circular Deps' : 'Cant find '+id);
 		if (mod['x'])
 			return mod['x'];
-		if (mod['l'] || !recursionsLeft)
-			throw new Error('Circular Deps');
-
-		for (var i = 0; i < mod['d'].length; i++) {
-			var modDepId = mod['d'][i];
+		
+		for (var md = mod['d'], i = 0; i < md.length; i++) {
+			var modDepId = md[i];
 			if (modDepId == REQUIRE)
-				modDepExports[i] = createExportRequire(modDepId); 
+				modDepExports[i] = createExportRequire(topLevelId); 
 			else if (modDepId == EXPORTS)
 				modDepExports[i] = modulesObj[EXPORTS];
 			else if (modDepId == MODULE)
 				modDepExports[i] = modulesObj;
 			else
-				modDepExports[i] = requireInternal(modDepId, id, recursionsLeft-1);
+				modDepExports[i] = requireInternal(modDepId, topLevelId, recursionsLeft-1);
 		}
 
 		mod['l'] = 1;
@@ -101,6 +89,14 @@
 				return requireInternal(id, baseId, RECURSION_DEPTH); 
 		}; 	
 	}
+	
+	(_window['define'] = function(id, dependencies) { // third arg is factory, but accessed using arguments..
+		modules[isString(id) ? id : ''] = {
+				'd': isList(id) ? id : (isList(dependencies) ? dependencies : [REQUIRE, EXPORTS, MODULE]),  // dependencies
+				'f': arguments[arguments.length-1] // factory
+		};
+	})['amd'] = {};
+	
 	_window[REQUIRE] = createExportRequire('');
 })(this);
 

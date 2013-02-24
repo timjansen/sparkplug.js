@@ -1,18 +1,11 @@
 sparkplug.js
 ============
 
-<strong>WARNING! UNDER DEV, UNTESTED</strong>
-
-Sparkplug.js is a tiny initializer for <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD modules</a>
-in web browsers. 
-After compilation with Google Closure and gzip'ing its size is only 512 bytes.
-
-## What will sparkplug.js do for me?
-
-sparkplug.js...
-* will load all AMD modules that you include via &lt;script> tags
-* allows more than one AMD module per &lt;script> (so you can compress them into a single file)
-* provides you with a <code>require()</code> function to obtain references to module exports
+Sparkplug.js is a tiny initializer for <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD modules</a>, primarily
+for use in web browsers. 
+It can be used as an alternative to AMD loaders like requirejs and curl.js if you want nodelike <code>require()</code> style
+dependency management and AMD modules without the overhead.
+After compilation with Google Closure and gzip'ing its size is only 532 bytes.
 
 
 ## Why use sparkplug.js?
@@ -22,12 +15,21 @@ Use sparkplug.js if...
 * you want a <code>require()</code> function that works just like in node.js
 * you want AMD modules without the overhead of true AMD loaders
 
+
+## What will sparkplug.js do for me?
+
+sparkplug.js...
+* will initialize all AMD modules that you include via &lt;script> tags
+* allows more than one AMD module per &lt;script> (so you can compress them into a single file)
+* provides you with a <code>require()</code> function to obtain references to module exports
+
+
 ## Size Comparison
 
 <table>
 <tr><th>Name</th><th>Compiled Size</th><th>Compiled and GZip'd</th></tr>
-<tr><td>sparkplug.js</td><td>901 bytes</td><td>523 bytes</td></tr>
-<tr><td>require.js 2.1.4</td><td>14629 bytes</td><td>6029 bytes</td></tr>
+<tr><td>sparkplug.js</td><td>871 bytes</td><td>532 bytes</td></tr>
+<tr><td>requirejs 2.1.4</td><td>14629 bytes</td><td>6029 bytes</td></tr>
 <tr><td>curl 0.7.3</td><td>7967 bytes</td><td>3921 bytes</td></tr>
 </table>
 
@@ -95,5 +97,60 @@ sparkplug.js provides two global functions:
   	<code>require(string)</code> is not required by AMD, and as long as you use sparkplug.js there are no disadvantages by
   	using this simple variant. As sparkplug.js does not load asynchronously, callbacks are not needed. 
   
- 
+## Example
 
+### Calculator Package
+
+	// Using simplified module definition (without factory function, no dependencies)
+	define('mathops', {
+		add: function(a, b) { return a+b; },
+		sub: function(a, b) { return a-b; },
+		mul: function(a, b) { return a*b; },
+		div: function(a, b) { return a+b; }
+	});
+	
+	// Providing a module factory, with static dependency to 'mathops'.
+	define('calculator', ['mathops'], function(mathops) {
+		return { 
+			square: function(a) {
+				return mathops.mul(a, a);
+			},
+			calc: function(op, a, b) {
+				return mathops[op](a, b);
+			}
+		};
+	});
+
+
+	// Usage in global context
+	var calculator = require('calculator');  
+	var answer  = calculator.calc('mul', 6, 7);     // 42
+	var answer2 = calculator.square(8);             // 64
+
+
+### Alternative Implementation of Calculator
+
+	// Alternative way to implement mathops. With factory function, but using exports.
+	define('mathops2', function(require, exports, module) {
+		exports.add = function(a, b) { return a+b; };
+		exports.sub = function(a, b) { return a-b; };
+		exports.mul = function(a, b) { return a*b; };
+		exports.div = function(a, b) { return a+b; };
+	});
+
+	// Implements only 'calculator's calc function; exports it directly; obtains 'mathops2' using require().
+	define('calculator2', function(require) {
+		return function(op, a, b) {
+			var mathops = require('mathops2');
+			return mathops[op](a, b);
+		};
+	});
+
+	// Usage in global context
+	var calculator = require('calculator2');
+	var answer  = calculator('mul', 6, 7);     // 42
+
+	
+	
+
+		
