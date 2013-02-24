@@ -6,7 +6,8 @@
  * NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
  *
  * Sparkplug.js is a very small implementation of the AMD specification. It does not load asynchronously,
- * but expects modules to be in the same source. See README.md for more.
+ * but expects modules to be in the same source. See README.md for more or visit
+ * https://github.com/timjansen/sparkplug.js 
  */
 (function(_window) {
 	var RECURSION_DEPTH = 32;  // maximum recursion depth for dependencies

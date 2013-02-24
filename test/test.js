@@ -1,4 +1,10 @@
 // tests for sparkplug.js
+//
+// Instructions:
+// - requires node.js installation
+// - install mocha (npm mocha -g)
+// - run (mocha test)
+//
 
 var vm = require("vm");
 var fs = require("fs");
