@@ -9,6 +9,11 @@
  * but expects modules to be in the same source. See README.md for more or visit
  * https://github.com/timjansen/sparkplug.js 
  */
+// ==ClosureCompiler==
+// @output_file_name sparkplug.min.js
+// @compilation_level ADVANCED_OPTIMIZATIONS
+// ==/ClosureCompiler==
+
 (function(_window) {
 	var RECURSION_DEPTH = 32;  // maximum recursion depth for dependencies
 	var REQUIRE = 'require';         
@@ -16,7 +21,7 @@
 	var MODULE = 'module';
 	var modules = {}; // stores id -> {d: ['dependency', 'dependency'], f: factoryfunction(){}, x: {exports}, l: <loadingflag>}
 	var anonymousIdIndex = 0;   // provides names for anonymous modules
-	var amd = {'ids':[]};       // define.amd content
+	var amd = {'ids':[], 'anonIds': []};       // define.amd content
 
 	function isType(s,o) {
 		return typeof s == o;
@@ -52,10 +57,9 @@
 	function requireInternal(id, baseId, recursionsLeft) { 
 		var modDepExports = [];  // array corresponding to mod.d, containing resolved dependencies
 		var topLevelId = resolvePath(id, baseId);
-		var anonymousIds = amd['ids'];
+		var anonymousIds = amd['anonIds'];
 		var mod = modules[topLevelId];
-		var modulesObj = {'id': topLevelId};
-		modulesObj[EXPORTS] = {};
+		var modulesObj = {'id': topLevelId, 'exports': {}};
 
 		
 		for (var i = 0; i < anonymousIds.length; i++)
@@ -99,7 +103,9 @@
 	}
 	
 	(_window['define'] = function(id, dependencies) { // third arg is factory, but accessed using arguments..
-		modules[isString(id) ? id : anonymousIdIndex++] = {
+		var realId = isString(id) ? id : anonymousIdIndex++;
+		amd['ids'].push(realId);
+		modules[realId] = {
 				'd': isList(id) ? id : (isList(dependencies) ? dependencies : [REQUIRE, EXPORTS, MODULE]),  // dependencies
 				'f': arguments[arguments.length-1] // factory
 		};

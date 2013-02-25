@@ -91,8 +91,8 @@ sparkplug.js provides two global functions:
   	<code>define()</code> will also provide the symbols
   	<code>require</code>, <code>exports</code> and <code>module</code> to AMD modules, if required by their dependencies.
   	
-  	<code>define.amd</code> is defined and has one sparkplug.js-specific property: <code>define.amd.ids</code>. You can put an array of ids in there to
-  	assign ids to anonymous modules. See Troublemakers section below.
+  	<code>define.amd</code> is defined with the properties shown below.
+  	
 * 	<code>require()</code> implements the <a href="http://wiki.commonjs.org/wiki/Modules/1.1.1#Require">CommonJS Modules/1.1.1 syntax</a> as well as the extensions 
   	<a href="https://github.com/amdjs/amdjs-api/wiki/require">required by AMD</a>. 
   	
@@ -104,6 +104,15 @@ sparkplug.js provides two global functions:
         
     You can also call <code>require(integer)</code> with a numeric argument to retrieve an anonymous module.
   
+ The AMD extension <code>define.amd</code> has the following, proprietary extensions in sparkplug.js:
+ *	<code>define.amd.anonIds</code> can be used to assign ids to anonymous modules. You only have to put one desired ids per module
+    in the order of definition. See Troublemakers section for examples.
+
+ *	<code>define.amd.ids</code> is an array containing the ids of all defined modules in the order of their definition.
+    Anonymous modules will show up as 0-based, increasing numbers, even if you have defined an id for them using <code>anonIds</code>. The first
+    anonymous module will be 0, the second 1...
+    
+  
 
 ## Troublemakers
 
@@ -112,7 +121,7 @@ sparkplug.js provides two global functions:
 Many AMD modules do not declare their id, but instead depend on the AMD loader to determine their id from their file name. sparkplug.js
 can not do this, as it does not know the file names, and also because it allows putting several modules into a single script.
 
-The recommended way to handle such modules is to set <code>define.amd.ids</code>. It contains an array of ids for anonymous modules
+The recommended way to handle such modules is to set <code>define.amd.anonIds</code>. It contains an array of ids for anonymous modules
 in the order of their declaration. It can be set either before or after their definition, but always before the first time they are 
 required (either explicitly or as dependency).
 
@@ -124,7 +133,7 @@ The following example loads three AMD modules. lodash.js and cookies.js are anon
 	<script src="lodash.js"></script>
 	
 	<script>
-		define.amd.ids = ['cookies', 'lodash'];
+		define.amd.anonIds = ['cookies', 'lodash'];
 	
 		var moment = require('moment'); 
 		var cookies = require('cookies');
@@ -145,8 +154,37 @@ The following example does this:
 		var _ = require(1);
 	</script>
  
-In general it is better to use <code>define.amd.ids</code>, as it results in more readable code. If there are dependencies between
-anonymous modules, <code>define.amd.ids</code> is also the only solution.
+In general it is better to use <code>define.amd.anonIds</code>, as it results in more readable code. If there are dependencies between
+anonymous modules, <code>define.amd.anonIds</code> is also the only solution.
+
+
+### Finding Module Ids
+
+Many libraries can be loaded as AMD modules, but often it's hard to find their id in the documentation, or the documentation does 
+not really tell you whether the library is anonymous or not. For these cases, sparkplug.js provides you with an 
+array <code>define.amd.ids</code> that allows you to see the ids of all loaded modules in the order of their definition. 
+Anonymous modules are represented by their 0-based index, which you can use to write a <code>define.amd.anonIds</code> mapping 
+table, or to require them by index.
+
+The easiest way to find out ids is to temporarily add a <code>console.log()</code> to your application, run it and see the 
+ids on the log:
+
+	<script src="sparkplug.js"></script>
+	<script src="moment.js"></script>
+	<script src="cookies.js"></script>
+	<script src="lodash.js"></script>
+
+	<script>
+		console.log(define.amd.ids);
+	</script>
+
+
+This example writes this to the log:
+
+	['moment', 0, 1]
+
+Thus 'moment.js' uses the id 'moment', and the other two modules are anonymous.
+
 
 
 ### jQuery

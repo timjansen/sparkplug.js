@@ -108,28 +108,53 @@ function runTests(loadInContext) {
 			assert.equal(sparkplug.require(2), 3);
 		});
 
-		it('should use require.amd.ids by as default ids', function() {
+		it('should use require.amd.anonIds by as default ids', function() {
 			var sparkplug = loadInContext();
 			sparkplug.define(function() { return 1; });
 			sparkplug.define(2);
 			sparkplug.define(function() { return 3; });
 
-			sparkplug.define.amd.ids = ['t1', 't2', 't3'];
+			sparkplug.define.amd.anonIds = ['t1', 't2', 't3'];
 			assert.equal(sparkplug.require('t1'), 1);
 			assert.equal(sparkplug.require('t2'), 2);
 			assert.equal(sparkplug.require('t3'), 3);
 		});
 		
-		it('should use resolve dependencies using define.amd.ids', function() {
+		it('should use resolve dependencies using define.amd.anonIds', function() {
 			var sparkplug = loadInContext();
 			sparkplug.define(function() { return 1; });
 			sparkplug.define(['t1'], 2);
 			sparkplug.define(['t1', 't2'], function(t1, t2) { assert.equal(t1, 1);  assert.equal(t2, 2); return 3; });
 
-			sparkplug.define.amd.ids = ['t1', 't2', 't3'];
+			sparkplug.define.amd.anonIds = ['t1', 't2', 't3'];
 			assert.equal(sparkplug.require('t3'), 3);
 			assert.equal(sparkplug.require('t1'), 1);
 			assert.equal(sparkplug.require('t2'), 2);
+		});
+		
+		it('should put module names in define.amd.ids', function() {
+			var sp = loadInContext();
+			assert.equal(sp.define.amd.ids, 0);
+			sp.define(function() { return 1; });
+			assert.equal(sp.define.amd.ids.length, 1);
+			assert.equal(sp.define.amd.ids[0], 0);
+			sp.define('t1', 2);
+			assert.equal(sp.define.amd.ids.length, 2);
+			assert.equal(sp.define.amd.ids[0], 0);
+			assert.equal(sp.define.amd.ids[1], 't1');
+			sp.define('t2',  5);
+			assert.equal(sp.define.amd.ids.length, 3);
+			assert.equal(sp.define.amd.ids[0], 0);
+			assert.equal(sp.define.amd.ids[1], 't1');
+			assert.equal(sp.define.amd.ids[2], 't2');
+
+			sp.define.amd.anonIds = ['t0'];
+			assert.equal(sp.require('t0'), 1);
+			assert.equal(sp.require('t1'), 2);
+			assert.equal(sp.define.amd.ids.length, 3);
+			assert.equal(sp.define.amd.ids[0], 0);
+			assert.equal(sp.define.amd.ids[1], 't1');
+			assert.equal(sp.define.amd.ids[2], 't2');
 		});
 		
 		it('should allow specifying dependencies', function() {
