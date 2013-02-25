@@ -5,7 +5,7 @@ Sparkplug.js is a tiny initializer for <a href="https://github.com/amdjs/amdjs-a
 for use in web browsers. 
 It can be used as an alternative to AMD loaders like requirejs and curl.jsm, giving you with Node-like <code>require()</code> style
 dependency management and AMD modules without the overhead.
-After compilation with Google Closure and gzip'ing its size is only 569 bytes.
+After compilation with Google Closure and gzip'ing its size is only 586 bytes.
 
 
 ## Why use sparkplug.js?
@@ -28,7 +28,7 @@ sparkplug.js...
 
 <table>
 <tr><th>Name</th><th>Compiled Size</th><th>Compiled and GZip'd</th></tr>
-<tr><td>sparkplug.js</td><td>935 bytes</td><td>569 bytes</td></tr>
+<tr><td>sparkplug.js</td><td>975 bytes</td><td>586 bytes</td></tr>
 <tr><td>requirejs 2.1.4</td><td>14629 bytes</td><td>6029 bytes</td></tr>
 <tr><td>curl 0.7.3</td><td>7967 bytes</td><td>3921 bytes</td></tr>
 </table>
