@@ -55,9 +55,9 @@ For example, you can load AMD modules like that:
 
 You could also define your main code as AMD module and start it with a simple require.
 	
-	<script src="sparkplug.js" defer></script>
-	<script src="minified.js" defer></script>
-	<script src="someotherlib.js" defer></script>
+	<script src="sparkplug.js"></script>
+	<script src="minified.js"></script>
+	<script src="someotherlib.js"></script>
 	
 	<script>
 		define("main", function(require) {
