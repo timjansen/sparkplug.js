@@ -40,13 +40,13 @@ You have to
 * Load as many AMD modules as you like using &lt;script>
 * Then execute your JavaScript which can use <code>require()</code> to obtain references
 
-For optimization, you can also compile sparkplug.js and the AMD modules into a single file, as long as sparkplug.js is on top.
+For optimal performance, you can also compile sparkplug.js and the AMD modules into a single file, just make sure that sparkplug.js is on top.
 
 For example, you can load AMD modules like that:
 	
-	<script src="sparkplug.js"></script>
-	<script src="minified.js"></script>
-	<script src="someotherlib.js"></script>
+	<script src="sparkplug.js" defer></script>
+	<script src="minified.js" deref></script>
+	<script src="someotherlib.js" defer></script>
 	
 	<script>
 		var $ = require("minified");
@@ -55,9 +55,9 @@ For example, you can load AMD modules like that:
 
 You could also define your main code as AMD module and start it with a simple require.
 	
-	<script src="sparkplug.js"></script>
-	<script src="minified.js"></script>
-	<script src="someotherlib.js"></script>
+	<script src="sparkplug.js" defer></script>
+	<script src="minified.js" defer></script>
+	<script src="someotherlib.js" defer></script>
 	
 	<script>
 		define("main", function(require) {
@@ -70,6 +70,29 @@ You could also define your main code as AMD module and start it with a simple re
 Of course, your application code can and usually should be put into a separate script file.
 
 
+## Reducing Page Load Time
+
+As sparkplug.js does not load any files itself, all the usual tips for improving load time apply. Ideally you compile all your files
+into a single file as this will reduce the number of HTTP requests and improve the GZip compression rate.
+
+To prevent the browser from blocking while it processes JavaScript you should either work with the <code>defer</code> and
+<code>async</code> attributes of the <code>&lt;script></code> element, or use the old-fashioned trick of putting all your JavaScript
+at the end of the page.
+
+Assuming you have put all your JavaScript, including sparkplug.js and all AMD modules, into a single file, I would recommend to load it
+like this:
+
+	<script src="all.js" defer async></script>
+	
+The <code>defer</code> and <code>async</code> attributes will prevent the browser from blocking. This works in practically all browsers today,
+even in older Internet Explorers.
+
+If you can not or do not want to put all your files into a single file, you should use only the <code>defer</code> attribute. <code>async</code>
+is not possible then, because it does not guarantee the order in which the files are initialized and sparkplug.js must always be invoked
+before the AMD modules.
+
+
+
 ## Limitations
 
 Sparkplug.js has some limitations:
@@ -78,8 +101,8 @@ Sparkplug.js has some limitations:
 * sparkplug.js will not load files given to <code>require()</code>, only modules that called <code>define()</code> with their id
 * sparkplug.js does not load/initialize asynchronously.
 
-Sparkplug.js is best suited for smaller projects that benefit from having only one or two files. Large JavaScript applications, which I would
-consider everything over 50kByte, may be better off using one of the more sophisticated loaders such as curl.js or require.js.
+Sparkplug.js is best suited for smaller projects that benefit from having only one or two files. Large JavaScript applications, especially
+those with an overall size over 50kb, may be better off using one of the more sophisticated loaders such as curl.js or require.js.
 
 
 ## API
