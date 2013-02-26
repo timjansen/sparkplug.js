@@ -44,9 +44,9 @@ For optimal performance, you can also compile sparkplug.js and the AMD modules i
 
 For example, you can load AMD modules like that:
 	
-	<script src="sparkplug.js" defer></script>
-	<script src="minified.js" deref></script>
-	<script src="someotherlib.js" defer></script>
+	<script src="sparkplug.js"></script>
+	<script src="minified.js"></script>
+	<script src="someotherlib.js"></script>
 	
 	<script>
 		var $ = require("minified");
@@ -108,8 +108,7 @@ those with an overall size over 50kb, may be better off using one of the more so
 ## API
 
 sparkplug.js provides three global functions:
-* 	<code>define()</code> implements the full API described in the <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD wiki</a>, but
-  	please note that modules must provide an ID in order for sparkplug.js to find them. 
+* 	<code>define()</code> implements the full API described in the <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD wiki</a>.  
   	
   	<code>define()</code> will also provide the symbols
   	<code>require</code>, <code>exports</code> and <code>module</code> to AMD modules, if required by their dependencies.
