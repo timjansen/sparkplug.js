@@ -109,11 +109,11 @@ sparkplug.js provides three global functions:
 	relative to the module's path.
  
   
- The AMD extension <code>define.amd</code> has the following, proprietary extensions in sparkplug.js:
- *	<code>define.amd.anonIds</code> can be used to assign ids to anonymous modules. You only have to put one desired ids per module
+The AMD extension <code>define.amd</code> has the following, proprietary extensions in sparkplug.js:
+*	<code>define.amd.anonIds</code> can be used to assign ids to anonymous modules. You only have to put one desired ids per module
     in the order of definition. See Troublemakers section for examples.
 
- *	<code>define.amd.ids</code> is an array containing the ids of all defined modules in the order of their definition.
+*	<code>define.amd.ids</code> is an array containing the ids of all defined modules in the order of their definition.
     Anonymous modules will show up as 0-based, increasing numbers, even if you have defined an id for them using <code>anonIds</code>. The first
     anonymous module will be 0, the second 1...
     
