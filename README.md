@@ -3,8 +3,8 @@ sparkplug.js
 
 Sparkplug.js is a tiny initializer for <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD modules</a>, primarily
 for use in web browsers. 
-It can be used as an alternative to AMD loaders like requirejs and curl.jsm, giving you with Node-like <code>require()</code> style
-dependency management and AMD modules without the overhead.
+It can be used as an alternative to AMD loaders like requirejs and curl.jsm, giving you namespaces and AMD module structure 
+a with Node-like <code>require()</code> style dependency management, but without the overhead of a full AMD loader.
 After compilation with Google Closure and gzip'ing its size is only 597 bytes.
 
 
@@ -104,7 +104,7 @@ sparkplug.js provides three global functions:
         
     You can also call <code>require(integer)</code> with a numeric argument to retrieve an anonymous module.
   
- * 	<code>require.toUrl()</code> is an <a href="https://github.com/amdjs/amdjs-api/wiki/require">AMD extension</a> that usually is not
+* 	<code>require.toUrl()</code> is an <a href="https://github.com/amdjs/amdjs-api/wiki/require">AMD extension</a> that usually is not
 	very useful when you use sparkplug.js, because sparkplug does not handle URLs. Still, <code>require.toUrl()</code> will resolve paths
 	relative to the module's path.
  
