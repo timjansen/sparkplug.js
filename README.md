@@ -5,7 +5,7 @@ Sparkplug.js is a tiny initializer for <a href="https://github.com/amdjs/amdjs-a
 for use in web browsers. 
 It can be used as an alternative to AMD loaders like requirejs and curl.jsm, giving you with Node-like <code>require()</code> style
 dependency management and AMD modules without the overhead.
-After compilation with Google Closure and gzip'ing its size is only 586 bytes.
+After compilation with Google Closure and gzip'ing its size is only 597 bytes.
 
 
 ## Why use sparkplug.js?
@@ -28,7 +28,7 @@ sparkplug.js...
 
 <table>
 <tr><th>Name</th><th>Compiled Size</th><th>Compiled and GZip'd</th></tr>
-<tr><td>sparkplug.js</td><td>975 bytes</td><td>586 bytes</td></tr>
+<tr><td>sparkplug.js</td><td>1041 bytes</td><td>597 bytes</td></tr>
 <tr><td>requirejs 2.1.4</td><td>14629 bytes</td><td>6029 bytes</td></tr>
 <tr><td>curl 0.7.3</td><td>7967 bytes</td><td>3921 bytes</td></tr>
 </table>
@@ -84,7 +84,7 @@ consider everything over 50kByte, may be better off using one of the more sophis
 
 ## API
 
-sparkplug.js provides two global functions:
+sparkplug.js provides three global functions:
 * 	<code>define()</code> implements the full API described in the <a href="https://github.com/amdjs/amdjs-api/wiki/AMD">AMD wiki</a>, but
   	please note that modules must provide an ID in order for sparkplug.js to find them. 
   	
@@ -103,6 +103,11 @@ sparkplug.js provides two global functions:
         If you do not plan to migrate your code to a asynchronous loader, using <code>require(string)</code> is recommended.
         
     You can also call <code>require(integer)</code> with a numeric argument to retrieve an anonymous module.
+  
+ * 	<code>require.toUrl()</code> is an <a href="https://github.com/amdjs/amdjs-api/wiki/require">AMD extension</a> that usually is not
+	very useful when you use sparkplug.js, because sparkplug does not handle URLs. Still, <code>require.toUrl()</code> will resolve paths
+	relative to the module's path.
+ 
   
  The AMD extension <code>define.amd</code> has the following, proprietary extensions in sparkplug.js:
  *	<code>define.amd.anonIds</code> can be used to assign ids to anonymous modules. You only have to put one desired ids per module

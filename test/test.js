@@ -299,7 +299,7 @@ function runTests(loadInContext) {
 						called++;
 			});
 			sp.require('a/b/c3');
-			assert(called, 1);
+			assert.equal(called, 1);
 		});
 
 		it('should allow relative dependencies using require()', function() {
@@ -322,8 +322,49 @@ function runTests(loadInContext) {
 				called++;
 			});
 			sp.require('a/b/c3');
-			assert(called, 1);
+			assert.equal(called, 1);
 		});
+	});
+	
+	
+	
+	
+	describe('#request.toUrl()', function() {
+		it('should not resolve relative dependencies at global level', function() {
+			var sp = loadInContext();
+			var called = 0;
+			sp.define('a/b/c/d', 56);
+			sp.define('a/b/c/d2', 69);
+			assert.equal(sp.require.toUrl('./a/b'), 'a/b');
+			assert.equal(sp.require.toUrl('../a/b'), 'a/b');
+		});
+		
+		it('should resolve relative dependencies at module level', function() {
+			var sp = loadInContext();
+			var called = 0;
+			sp.define('a/b/c/d', 56);
+			sp.define('a/b/c/d2', 69);
+			sp.define('a/b/c', 5);
+			sp.define('a/b/c2', 15);
+			sp.define('a/b2', 19);
+			sp.define('a/b3', 69);
+			
+			sp.define('a/b/c3', function(require) {
+				assert.equal(require.toUrl('./c.js'), 'a/b/c.js');
+				assert.equal(require.toUrl('./././c2'), 'a/b/c2');
+				assert.equal(require.toUrl('../b2'), 'a/b2');
+				assert.equal(require.toUrl('../../a/b3'), 'a/b3');
+				assert.equal(require.toUrl('./c/d'), 'a/b/c/d');
+				assert.equal(require.toUrl('../b/../b/c/./d2'), 'a/b/c/d2');
+				assert.equal(require.toUrl('../z/z/./x.js'), 'a/z/z/x.js');
+				called++;
+			});
+			sp.require('a/b/c3');
+			assert.equal(called, 1);
+		});
+
+
+
 	});
 }
 

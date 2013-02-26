@@ -36,18 +36,22 @@
 		return v && v.length != null && !isString(v) && !isFunction(v);
 	}
 	
+	function each(list, f) {
+		for (var i = 0; i < list.length; i++)
+			f(list[i], i);
+	}
+	
 	function resolvePath(path, base) {
 		if (/^\.\.?\//.test(path))  {
-			var pathSteps = path.split('/');
 			var step;
 			var newPath = base.split('/');
 			newPath.pop();
-			while ((step = pathSteps.shift()) != null)  {
+			each(path.split('/'), function(step) {
 				if (step == '..')
 					newPath.pop();
 				else if (step != '' && step != '.')
 					newPath.push(step);
-			}
+			});
 			return newPath.join('/');
 		}
 		else
@@ -57,21 +61,19 @@
 	function requireInternal(id, baseId, recursionsLeft) { 
 		var modDepExports = [];  // array corresponding to mod.d, containing resolved dependencies
 		var topLevelId = resolvePath(id, baseId);
-		var anonymousIds = amd['anonIds'];
 		var mod = modules[topLevelId];
 		var modulesObj = {'id': topLevelId, 'exports': {}};
 
-		
-		for (var i = 0; i < anonymousIds.length; i++)
-			if (topLevelId == anonymousIds[i])
+		each(amd['anonIds'], function(anonId, i) {
+			if (topLevelId == anonId)
 				mod = modules[i];
+		});	
 		if (!mod || mod['l'] || !recursionsLeft)
 			throw new Error(mod ? 'Circular Deps' : 'Cant find '+id);
 		if (mod['x'])
 			return mod['x'];
 		
-		for (var md = mod['d'], i = 0; i < md.length; i++) {
-			var modDepId = md[i];
+		each(mod['d'], function(modDepId, i) {
 			if (modDepId == REQUIRE)
 				modDepExports[i] = createExportRequire(topLevelId); 
 			else if (modDepId == EXPORTS)
@@ -80,7 +82,7 @@
 				modDepExports[i] = modulesObj;
 			else
 				modDepExports[i] = requireInternal(modDepId, topLevelId, recursionsLeft-1);
-		}
+		});
 
 		mod['l'] = 1;
 		mod['x'] = isFunction(mod['f']) ? (mod['f'].apply(_window, modDepExports) || modulesObj[EXPORTS]) : mod['f'];
@@ -89,17 +91,20 @@
 	}
 
 	function createExportRequire(baseId) {
-		return function r(id, callback) { 
+		function r(id, callback) { 
 			if (isList(id)) {
 				var deps = [];
-				for (var i = 0; i < id.length; i++)
-					deps.push(r(id[i]));
+				each(id, function(dep) {
+					deps.push(r(dep));
+				});
 				if (isFunction(callback))
 					callback.apply(_window, deps);
 			} 
 			else
 				return requireInternal(id, baseId, RECURSION_DEPTH); 
-		}; 	
+		};
+		r['toUrl'] = function(id) { return resolvePath(id, baseId); };
+		return r;
 	}
 	
 	(_window['define'] = function(id, dependencies) { // third arg is factory, but accessed using arguments..
